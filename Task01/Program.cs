@@ -66,6 +66,7 @@ namespace Task01
                 PrintEnumerableCollection<int>(arrMethod, "*");
             }
             catch (ArgumentNullException) { Console.WriteLine("ArgumentNullException"); }
+            catch(InvalidOperationException) { Console.WriteLine("InvalidOperationException"); }
 
             Console.ReadLine();
         }
@@ -80,10 +81,10 @@ namespace Task01
         /// <param name="separator">Разделитель элементов</param>
         public static void PrintEnumerableCollection<T>(IEnumerable<T> collection, string separator)
         {
-            string res = collection.Aggregate(string.Empty,
-                (s, num) => s + (s.Length < 2 * collection.Count() - 2
-                    ? (num + separator).ToString()
-                    : num.ToString()));
+            if (collection == null || !collection.Any())
+                throw new InvalidOperationException();
+            var res = collection.Skip(1).Aggregate(collection.First().ToString(),
+                (s, num) => s + separator + num);
             Console.WriteLine(res);
         }
     }
