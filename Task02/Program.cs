@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Linq;
 
 /* В задаче не использовать циклы for, while. Все действия по обработке данных выполнять с использованием LINQ
@@ -31,37 +32,48 @@ namespace Task02
 {
     class Program
     {
-        static void Main(string[] args)
+        static void Main()
         {
             RunTesk02();
         }
 
         public static void RunTesk02()
         {
-            int[] arr;
+            int[] arr = new int[0];
             try
             {
                 // Попробуйте осуществить считывание целочисленного массива, записав это ОДНИМ ВЫРАЖЕНИЕМ.
-                arr = 
+                arr = (Console.ReadLine().Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries))
+                    .Select(str => int.Parse(str)).ToArray();
             }
-            
-            
-            var filteredCollection = arr.
-           
+            catch (FormatException) { Console.WriteLine("FormatException"); }
+            catch (ArgumentNullException) { Console.WriteLine("ArgumentNullException"); }
+            catch (OverflowException) { Console.WriteLine("OverflowException"); }
+            catch (ArgumentException) { Console.WriteLine("ArgumentException"); }
+
+            // Выбирает элементы коллекции до 0
+            var filteredCollection = arr.TakeWhile(val => val != 0);
+
             try
             {
-                
+
                 // использовать статическую форму вызова метода подсчета среднего
-                double averageUsingStaticForm = 
+                double averageUsingStaticForm = Enumerable.Average(Enumerable.Select(filteredCollection, val => val * val));
                 // использовать объектную форму вызова метода подсчета среднего
-                double averageUsingInstanceForm = 
+                double averageUsingInstanceForm = filteredCollection.Select(val => val * val).Average();
+
+                Console.WriteLine("{0:F3}", averageUsingStaticForm);
+                Console.WriteLine("{0:F3}", averageUsingInstanceForm);
 
 
                 // вывести элементы коллекции в одну строку
-                filteredCollection.
+                Console.WriteLine(filteredCollection.Skip(1).Aggregate(filteredCollection.First().ToString(),
+                    (s, num) => s + ' ' + num));
             }
-          
+            catch (InvalidOperationException) { Console.WriteLine("InvalidOperationException"); }
+
+            Console.ReadLine();
         }
-        
+
     }
 }
