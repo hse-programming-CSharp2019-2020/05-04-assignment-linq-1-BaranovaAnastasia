@@ -52,46 +52,86 @@ namespace Task03
 {
     class Program
     {
-        static void Main(string[] args)
+        static void Main()
         {
-            int N
-            List<ComputerInfo> computerInfoList = new List<ComputerInfo>();
+            int N;  //Количество компьютеров
+            List<ComputerInfo> computerInfoList = new List<ComputerInfo>(); //Список компьютеров
             try
             {
-                N = 
+                N = int.Parse(Console.ReadLine());
                 
                 for (int i = 0; i < N; i++)
                 {
-                    
+                    string[] info = Console.ReadLine().Split(new[] {' '}, StringSplitOptions.RemoveEmptyEntries);
+                    computerInfoList.Add(new ComputerInfo()
+                    {
+                        Owner = info[0],
+                        Year = int.Parse(info[1]),
+                        ComputerManufacturer = (Manufacturer)int.Parse(info[2]),
+                    });
                 }
             }
-           
+            catch (FormatException) { Console.WriteLine("FormatException"); }
+            catch (ArgumentNullException) { Console.WriteLine("ArgumentNullException"); }
+            catch (OverflowException) { Console.WriteLine("OverflowException"); }
+            catch (ArgumentException) { Console.WriteLine("ArgumentException"); }
+
 
             // выполните сортировку одним выражением
-            var computerInfoQuery = from 
+            var computerInfoQuery = from computer in computerInfoList
+                orderby computer.Owner, Enum.GetName(typeof(Manufacturer), computer.ComputerManufacturer), computer.Year
+                select computer;
 
             PrintCollectionInOneLine(computerInfoQuery);
 
             Console.WriteLine();
 
             // выполните сортировку одним выражением
-            var computerInfoMethods = computerInfoList.
+            var computerInfoMethods = computerInfoList.OrderBy(computer =>
+                    computer.Owner)
+                .ThenBy(computer => Enum.GetName(typeof(Manufacturer), computer.ComputerManufacturer))
+                .ThenBy(computer =>
+                    computer.Year);
 
             PrintCollectionInOneLine(computerInfoMethods);
-            
+            Console.ReadLine();
         }
 
         // выведите элементы коллекции на экран с помощью кода, состоящего из одной линии (должна быть одна точка с запятой)
+        /// <summary>
+        /// Выводит элементы коллекции на экран в формате:
+        /// <Фамилия_владельца>: <Имя_производителя> [<Год_производства>]
+        /// </summary>
         public static void PrintCollectionInOneLine(IEnumerable<ComputerInfo> collection)
         {
+            Console.Write(collection.Aggregate(string.Empty, (s, val) => 
+                s + string.Format("{0}: {1} [{2}]", val.Owner, Enum.GetName(typeof(Manufacturer), val.ComputerManufacturer), val.Year) + Environment.NewLine));
         }
     }
 
 
     class ComputerInfo
     {
+        /// <summary>
+        /// Владелец
+        /// </summary>
         public string Owner { get; set; }
+        /// <summary>
+        /// Год выпуска
+        /// </summary>
+        public int Year { get; set; }
+        /// <summary>
+        /// Производитель
+        /// </summary>
         public Manufacturer ComputerManufacturer { get; set; }
-        
+    }
+
+
+    enum Manufacturer
+    {
+        Dell = 0, 
+        Asus = 1, 
+        Apple = 2, 
+        Microsoft = 3
     }
 }
