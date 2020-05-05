@@ -66,6 +66,9 @@ namespace Task03
                 for (int i = 0; i < N; i++)
                 {
                     string[] info = Console.ReadLine().Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                    int manufacturer = int.Parse(info[2]);
+                    if (manufacturer > 3 || manufacturer < 0)
+                        throw new ArgumentException(nameof(manufacturer));
                     computerInfoList.Add(new ComputerInfo()
                     {
                         Owner = info[0],
