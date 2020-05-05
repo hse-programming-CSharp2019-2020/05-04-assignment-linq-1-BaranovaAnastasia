@@ -79,7 +79,7 @@ namespace Task03
 
             // выполните сортировку одним выражением
             var computerInfoQuery = from computer in computerInfoList
-                orderby computer.Owner, Enum.GetName(typeof(Manufacturer), computer.ComputerManufacturer), computer.Year
+                orderby computer.Owner descending , Enum.GetName(typeof(Manufacturer), computer.ComputerManufacturer), computer.Year descending 
                 select computer;
 
             PrintCollectionInOneLine(computerInfoQuery);
@@ -87,10 +87,10 @@ namespace Task03
             Console.WriteLine();
 
             // выполните сортировку одним выражением
-            var computerInfoMethods = computerInfoList.OrderBy(computer =>
+            var computerInfoMethods = computerInfoList.OrderByDescending(computer =>
                     computer.Owner)
                 .ThenBy(computer => Enum.GetName(typeof(Manufacturer), computer.ComputerManufacturer))
-                .ThenBy(computer =>
+                .ThenByDescending(computer =>
                     computer.Year);
 
             PrintCollectionInOneLine(computerInfoMethods);
