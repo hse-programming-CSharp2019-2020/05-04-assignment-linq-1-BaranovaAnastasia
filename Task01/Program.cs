@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 /* В задаче не использовать циклы for, while. Все действия по обработке данных выполнять с использованием LINQ
  * 
@@ -34,39 +32,59 @@ namespace Task01
 {
     class Program
     {
-        static void Main(string[] args)
+        static void Main()
         {
             RunTesk01();
         }
 
         public static void RunTesk01()
         {
-            int[] arr;
+            int[] arr = new int[0];
             try
             {
                 // Попробуйте осуществить считывание целочисленного массива, записав это ОДНИМ ВЫРАЖЕНИЕМ.
-                arr = 
+                arr = (Console.ReadLine().Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries))
+                    .Select(str => int.Parse(str)).ToArray();
             }
-            
+            catch (FormatException) { Console.WriteLine("FormatException"); }
+            catch (ArgumentNullException) { Console.WriteLine("ArgumentNullException"); }
+            catch (OverflowException) { Console.WriteLine("OverflowException"); }
+            catch (ArgumentException) { Console.WriteLine("ArgumentException"); }
+
             // использовать синтаксис запросов!
-            IEnumerable<int> arrQuery = from 
+            IEnumerable<int> arrQuery = from num in arr
+                                        where num % 2 == 0 || num < 0
+                                        select num;
 
             // использовать синтаксис методов!
-            IEnumerable<int> arrMethod = arr.
+            IEnumerable<int> arrMethod = arr.Where(num => num % 2 == 0 || num < 0);
 
+            // Вывод коллекции
             try
             {
                 PrintEnumerableCollection<int>(arrQuery, ":");
                 PrintEnumerableCollection<int>(arrMethod, "*");
             }
+            catch (ArgumentNullException) { Console.WriteLine("ArgumentNullException"); }
+
+            Console.ReadLine();
         }
 
         // Попробуйте осуществить вывод элементов коллекции с учетом разделителя, записав это ОДНИМ ВЫРАЖЕНИЕМ.
         // P.S. Есть два способа, оставьте тот, в котором применяется LINQ...
+
+        /// <summary>
+        /// Выводит в консоль элементы коллекции
+        /// </summary>
+        /// <param name="collection">Коллекция, элементы которой необходимо вывести</param>
+        /// <param name="separator">Разделитель элементов</param>
         public static void PrintEnumerableCollection<T>(IEnumerable<T> collection, string separator)
         {
-           
-           
+            string res = collection.Aggregate(string.Empty,
+                (s, num) => s + (s.Length < 2 * collection.Count() - 2
+                    ? (num + separator).ToString()
+                    : num.ToString()));
+            Console.WriteLine(res);
         }
     }
 }
