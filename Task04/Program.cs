@@ -47,21 +47,22 @@ namespace Task04
                 // Попробуйте осуществить считывание целочисленного массива, записав это ОДНИМ ВЫРАЖЕНИЕМ.
                 arr = (Console.ReadLine().Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries))
                     .Select(str => int.Parse(str)).ToArray();
+
+
+                // использовать синтаксис методов! SQL-подобные запросы не писать!
+
+                int arrAggregate = arr.Aggregate(-5, (s, val) =>
+                    -s + val) * (int)Math.Pow(-1, arr.Length % 2 + 1);
+
+                int arrMyAggregate = MyClass.MyAggregate(arr);
+
+                Console.WriteLine(arrAggregate);
+                Console.WriteLine(arrMyAggregate);
             }
             catch (FormatException) { Console.WriteLine("FormatException"); }
             catch (ArgumentNullException) { Console.WriteLine("ArgumentNullException"); }
             catch (OverflowException) { Console.WriteLine("OverflowException"); }
             catch (ArgumentException) { Console.WriteLine("ArgumentException"); }
-
-            // использовать синтаксис методов! SQL-подобные запросы не писать!
-
-            int arrAggregate = arr.Aggregate(-5, (s, val) =>
-                -s + val) * (int)Math.Pow(-1, arr.Length % 2 + 1);
-
-            int arrMyAggregate = MyClass.MyAggregate(arr);
-
-            Console.WriteLine(arrAggregate);
-            Console.WriteLine(arrMyAggregate);
 
             Console.ReadLine();
         }
