@@ -51,8 +51,8 @@ namespace Task04
 
                 // использовать синтаксис методов! SQL-подобные запросы не писать!
 
-                int arrAggregate = arr.Aggregate(-5, (s, val) =>
-                    -s + val) * (int)Math.Pow(-1, arr.Length % 2 + 1);
+                int arrAggregate = checked(arr.Aggregate(-5, (s, val) =>
+                    -s + val) * (int)Math.Pow(-1, arr.Length % 2 + 1));
 
                 int arrMyAggregate = MyClass.MyAggregate(arr);
 
