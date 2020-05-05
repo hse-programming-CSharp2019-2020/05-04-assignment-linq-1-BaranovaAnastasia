@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 
 /*
  * На вход подается строка, состоящая из целых чисел типа int, разделенных одним или несколькими пробелами.
@@ -32,37 +34,56 @@ namespace Task04
 {
     class Program
     {
-        static void Main(string[] args)
+        static void Main()
         {
             RunTesk04();
         }
 
         public static void RunTesk04()
         {
-            int[] arr;
+            int[] arr = new int[0];
             try
             {
                 // Попробуйте осуществить считывание целочисленного массива, записав это ОДНИМ ВЫРАЖЕНИЕМ.
-                arr = 
+                arr = (Console.ReadLine().Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries))
+                    .Select(str => int.Parse(str)).ToArray();
             }
-           
-                // использовать синтаксис методов! SQL-подобные запросы не писать!
-               
-                int arrAggregate = arr.
+            catch (FormatException) { Console.WriteLine("FormatException"); }
+            catch (ArgumentNullException) { Console.WriteLine("ArgumentNullException"); }
+            catch (OverflowException) { Console.WriteLine("OverflowException"); }
+            catch (ArgumentException) { Console.WriteLine("ArgumentException"); }
 
-                int arrMyAggregate = MyClass.MyAggregate(arr);
+            // использовать синтаксис методов! SQL-подобные запросы не писать!
 
-                Console.WriteLine(arrAggregate);
-                Console.WriteLine(arrMyAggregate);
-           
+            int arrAggregate = arr.Aggregate(-5, (s, val) =>
+                -s + val) * (int)Math.Pow(-1, arr.Length % 2 + 1);
+
+            int arrMyAggregate = MyClass.MyAggregate(arr);
+
+            Console.WriteLine(arrAggregate);
+            Console.WriteLine(arrMyAggregate);
+
+            Console.ReadLine();
         }
     }
 
     static class MyClass
     {
-        public static int MyAggregate()
+        /// <summary>
+        /// Для данной коллекции возвращает сумму
+        /// 5 + collection[0] - collection[1] + collection[2] - collection[3] + ...
+        /// </summary>
+        public static int MyAggregate(IEnumerable<int> collection)
         {
-            
+            return 5
+                   + collection.Select((val, i) => new { val, i })
+                       .Where(p => p.i % 2 == 0)
+                       .Select(p => p.val)
+                       .Sum()
+                   - collection.Select((val, i) => new { val, i })
+                       .Where(p => p.i % 2 == 1)
+                       .Select(p => p.val)
+                       .Sum();
         }
     }
 }
