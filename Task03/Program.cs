@@ -62,10 +62,10 @@ namespace Task03
             try
             {
                 N = int.Parse(Console.ReadLine());
-                
+
                 for (int i = 0; i < N; i++)
                 {
-                    string[] info = Console.ReadLine().Split(new[] {' '}, StringSplitOptions.RemoveEmptyEntries);
+                    string[] info = Console.ReadLine().Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
                     computerInfoList.Add(new ComputerInfo()
                     {
                         Owner = info[0],
@@ -82,8 +82,10 @@ namespace Task03
 
             // выполните сортировку одним выражением
             var computerInfoQuery = from computer in computerInfoList
-                orderby computer.Owner descending , Enum.GetName(typeof(Manufacturer), computer.ComputerManufacturer), computer.Year descending 
-                select computer;
+                                    orderby computer.Owner descending,
+                                        Enum.GetName(typeof(Manufacturer),
+                                            computer.ComputerManufacturer), computer.Year descending
+                                    select computer;
 
             PrintCollectionInOneLine(computerInfoQuery);
 
@@ -107,7 +109,7 @@ namespace Task03
         /// </summary>
         public static void PrintCollectionInOneLine(IEnumerable<ComputerInfo> collection)
         {
-            Console.Write(collection.Aggregate(string.Empty, (s, val) => 
+            Console.Write(collection.Aggregate(string.Empty, (s, val) =>
                 s + string.Format("{0}: {1} [{2}]", val.Owner, Enum.GetName(typeof(Manufacturer), val.ComputerManufacturer), val.Year) + Environment.NewLine));
         }
     }
@@ -115,14 +117,31 @@ namespace Task03
 
     class ComputerInfo
     {
+        private string owner;
+        private int year;
+
         /// <summary>
         /// Владелец
         /// </summary>
-        public string Owner { get; set; }
+        public string Owner
+        {
+            get => owner;
+            set => owner = value ?? throw new ArgumentException(nameof(value));
+        }
+
         /// <summary>
         /// Год выпуска
         /// </summary>
-        public int Year { get; set; }
+        public int Year
+        {
+            get => year;
+            set
+            {
+                if (value < 1970 || value > 2020)
+                    throw new ArgumentException(nameof(value));
+                year = value;
+            }
+        }
         /// <summary>
         /// Производитель
         /// </summary>
@@ -132,9 +151,9 @@ namespace Task03
 
     enum Manufacturer
     {
-        Dell = 0, 
-        Asus = 1, 
-        Apple = 2, 
+        Dell = 0,
+        Asus = 1,
+        Apple = 2,
         Microsoft = 3
     }
 }
